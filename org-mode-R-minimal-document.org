@@ -1,0 +1,539 @@
+:PROPERTIES:
+:ID:       bdc67040-7646-45b0-adca-db9c55340c02
+:END:
+# #+TITLE: Org Mode R Minimal Document using tikzDevice
+#+TITLE: Minimal document example for plot generation using Org Mode with R source code and tikzDevice library
+#+SUBTITLE: suited for a Doom Emacs distribution.
+#+DATE: 10 September 2021
+#+AUTHOR: manuel.fuica.morales@gmail.com
+#+OPTIONS: toc:2
+#+LATEX_HEADER: \usepackage{tikz}
+
+* TOC :TOC_2:noexport:
+- [[#about][About]]
+  - [[#this-tutorial][this tutorial]]
+  - [[#tikzdevice-and-knitr][=tikzDevice= and =knitr=]]
+- [[#software-used][Software used]]
+  - [[#emacs][emacs]]
+  - [[#doom][doom]]
+  - [[#org][org]]
+  - [[#r][R]]
+- [[#emacs-configuration][Emacs configuration]]
+- [[#simple-plot][Simple plot]]
+  - [[#dependencies][dependencies]]
+  - [[#codeblocks][codeblocks]]
+  - [[#org-code-of-the-above][org code of the above]]
+  - [[#exporting-to-pdf][exporting to pdf]]
+
+* About
+** this tutorial
+
+#+begin_quote
+I'd recommend to read the pdf version of this, or GUI emacs at least,
+CLI emacs wont show the generated graph.
+#+end_quote
+
+I write tutorials with the objective of reminding me later how to do the
+stuff when I forgot, so they are written from a noob-ish POV. They are
+more like personal notes with a touch of in-case-someone-else-reads-it. It's
+on the web and it's not private anyway so...
+
+The objective of this file is to be a minimal example of a 'live'
+document using orgmode capabilities to work with =R=.
+
+I have used as guide mainly the following tutorials:
+- https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-LaTeX.html
+- https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-R.html
+- https://orgmode.org/worg/org-tutorials/org-R/org-R.html
+- https://github.com/erikriverson/org-mode-R-tutorial/blob/master/org-mode-R-tutorial.org
+
+** =tikzDevice= and =knitr=
+- Use:
+  a) =file.R= -> =knitr= -> standalone =file.tex= file.
+  b) =file.R= -> =tikzDevice= -> =file.tex= file that only contains the
+     plots of the =file.R= program. The plots in the =file.tex= file are
+     written in =tikz=, whereas in the =file.R= the plots are written
+     in, redundantly, =R=.
+
+
+- both =tikzDevice= and =knitr= are =R= libraries that enable =tex= friendly
+  output of an =file.R=.
+- =tikzDevice= enables =R= to create a =file.tex= out of the plots of
+  a =file.R= file.
+- =knitr= instead, enables the whole =file.R= file to be exported into a
+  =file.tex= file, including the plots and the rest of the document.
+  You can use it to build =reports=, =beamer= presentations, etc.
+
+
+a) =R code= -> =tikzDevice= -> file that can be processed by =LaTeX=, but it
+   /only/ contains =tikz= code. Requires a separate preamble in order for
+   =LaTeX= to sucessfully generate a =pdf= file from it.
+b) =R code= -> =knitr= -> file that can be processed by =LaTeX=, and can be
+   a standalone file which generates a =report= or =beamer= presentation, etc.
+   /Can/ be directly proccesed by =LaTeX= and will sucessfully generate a
+   =pdf= file.
+
+* Software used
+
+** emacs
+#+name: emacs_version
+#+begin_src sh :exports both :results output
+emacs --version
+#+end_src
+
+#+RESULTS: emacs_version
+: GNU Emacs 27.1
+: Copyright (C) 2020 Free Software Foundation, Inc.
+: GNU Emacs comes with ABSOLUTELY NO WARRANTY.
+: You may redistribute copies of GNU Emacs
+: under the terms of the GNU General Public License.
+: For more information about these matters, see the file named COPYING.
+
+** doom
+#+name: doom_version
+#+begin_src sh :exports both :results output
+~/.emacs.d/bin/doom version
+#+end_src
+
+#+RESULTS: doom_version
+: > Executing 'doom version' with Emacs 27.1 at 2021-09-10 06:25:37
+:   Doom v3.0.0-alpha (HEAD -> develop 13958c81 2021-07-10 10:30:49 -0400)
+
+** org
+#+name: org-version
+#+begin_src elisp :exports both :results value
+org-version
+#+end_src
+
+#+RESULTS: org-version
+: 9.5
+
+
+** R
+#+name: R_version
+#+begin_src R :session version :exports both :results output
+version
+#+end_src
+
+#+RESULTS: R_version
+#+begin_example
+               _
+platform       x86_64-pc-linux-gnu
+arch           x86_64
+os             linux-gnu
+system         x86_64, linux-gnu
+status
+major          4
+minor          1.1
+year           2021
+month          08
+day            10
+svn rev        80725
+language       R
+version.string R version 4.1.1 (2021-08-10)
+nickname       Kick Things
+#+end_example
+
+
+* Emacs configuration
+
+You have to configure your =~/.emacs/= in order for it to work with =R=.
+
+Doom Emacs does a pretty good job. You can read the docs at:
+- https://github.com/hlissner/doom-emacs/blob/develop/modules/lang/ess/README.org
+
+
+In short, at time of writing all you have to do is
+: (ess +lsp)               ; emacs speaks statistics
+in your =~/.doom.d/init.el=. And probably install some stuff via
+=sudo apt install ...= but that's out of the scope of this document.
+And remember to =~/.emacs.d/bin/doom sync= after you edit that file.
+
+Once your Emacs is configured to work with =R= ...
+
+* Simple plot
+** dependencies
+Your =file.tex= generated by orgmode should contain the =tikz= library.
+
+# just to show off different ways to export code in orgmode
+
+This is represented by src_latex[:exports code]{\usepackage{tikz}}
+somewhere in the preamble --- before the
+src_latex[:exports code]{\begin{document}}
+line of the exported =file.tex= ---. You accomplish this by putting
+#+begin_example org
+,#+LATEX_HEADER: \usepackage{tikz}
+#+end_example
+somewhere early in the document.
+
+Also, at least in my case, my =R= distribution, installed via command line
+using the typical =sudo apt install r-cran-...= did not come with the
+=tikzDevice= library pre-installed --- I'm a complete noob with R so I
+do not know if that's default ---. Credits to this thread for the help:
+- https://lightonphiri.org/blog/r-graphical-representation-installing-tikzdevice-package
+
+** codeblocks
+
+From within a shell --- ahem, =tmux=, ahem --- you have to
+#+begin_example shell
+$ R
+> install.packages('tikzDevice')
+#+end_example
+then follow the prompts.
+
+#+begin_quote
+I mean, you can do that from within an orgmode code source block, but that
+led to some issues that are not worth solving for the document's purpose.
+#+end_quote
+
+Once the =tikzDevice= library is installed, you can proceed to evaluate
+the following code blocks --- using =C-c C-c= --- :
+
+- Actually load the library
+#+begin_src R :session :exports code :results silent
+  library("tikzDevice")
+#+end_src
+
+- And the magic part
+
+#+name: test_plot
+#+begin_src R :session :exports both :results output latex :file test.png
+  tikz(console=TRUE, width=4, height=4)
+  plot(rnorm(100), rnorm(100))
+  dummy <- dev.off()
+#+end_src
+
+#+RESULTS: test_plot
+#+begin_export latex
+% Created by tikzDevice version 0.12.3.1 on 2021-09-10 04:53:27
+% !TEX encoding = UTF-8 Unicode
+\relax
+\begin{tikzpicture}[x=1pt,y=1pt]
+\definecolor{fillColor}{RGB}{255,255,255}
+\path[use as bounding box,fill=fillColor,fill opacity=0.00] (0,0) rectangle (289.08,289.08);
+\begin{scope}
+\path[clip] ( 49.20, 61.20) rectangle (263.88,239.88);
+\definecolor{drawColor}{RGB}{0,0,0}
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (116.30,147.68) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (194.23, 88.34) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (173.94,142.84) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (240.77,120.68) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (150.53,184.46) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (131.40,120.30) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (104.00,162.39) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (199.73, 91.80) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (140.13,175.14) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (158.29, 82.96) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 90.91,136.05) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 97.70, 98.01) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (112.92,132.53) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (156.06,129.65) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (125.48,179.74) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (113.29,166.21) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (147.94,115.88) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 66.66,101.07) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (136.60,122.43) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (154.28,114.33) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (161.70,133.51) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (141.70,144.38) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (177.44,111.13) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (128.50,233.26) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (172.25,129.68) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (154.10,113.07) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (146.28,116.20) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (112.91,149.33) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (145.51,127.70) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (117.60, 87.14) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (137.61,123.52) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 59.46,120.65) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (121.08,137.22) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (112.43,139.14) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (128.76,179.37) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (125.99, 93.35) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (159.64,140.06) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (195.02, 76.93) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (130.59,126.04) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (114.12,149.67) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (130.57,116.30) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (105.96,200.21) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (160.09,190.10) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (235.09,160.84) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (135.54,141.94) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (129.49,169.23) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (218.12,115.27) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (255.93,141.56) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (169.79,135.82) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (161.62,137.96) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (223.27, 91.86) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 57.15,160.84) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (166.82,127.05) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (225.28, 90.25) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (121.58,204.59) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (121.60,135.10) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (135.90,157.71) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (182.10,155.51) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (133.66,121.26) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (108.73,163.09) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (158.64,195.61) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (126.80,106.85) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (200.35,132.15) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (101.76, 67.82) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (191.10,158.43) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (102.35,150.12) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (123.40,134.13) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (129.29,121.19) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (113.55,134.02) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (102.85,216.22) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (231.92,102.88) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (198.25,211.54) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (183.13,186.61) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (107.25,135.51) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (125.73,134.88) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (153.84,140.43) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (125.47,124.63) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 92.34,163.80) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (159.80,120.55) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (171.19, 94.04) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (156.25, 94.66) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (135.08, 92.68) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (199.59,143.29) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (145.95,175.46) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (104.77, 78.07) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 73.41,139.94) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (162.11,165.77) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (149.97,170.04) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (159.47,134.76) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (134.56,158.89) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (118.40,157.72) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (149.04,102.79) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 93.31,194.05) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (204.65,128.96) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 97.38,149.10) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (167.45,109.81) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 92.68,174.17) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (115.47,161.81) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (121.29,121.23) circle (  2.25);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (133.85,110.27) circle (  2.25);
+\end{scope}
+\begin{scope}
+\path[clip] (  0.00,  0.00) rectangle (289.08,289.08);
+\definecolor{drawColor}{RGB}{0,0,0}
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 53.10, 61.20) -- (222.02, 61.20);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 53.10, 61.20) -- ( 53.10, 55.20);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 95.33, 61.20) -- ( 95.33, 55.20);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (137.56, 61.20) -- (137.56, 55.20);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (179.79, 61.20) -- (179.79, 55.20);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] (222.02, 61.20) -- (222.02, 55.20);
+
+\node[text=drawColor,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at ( 53.10, 39.60) {-2};
+
+\node[text=drawColor,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at ( 95.33, 39.60) {-1};
+
+\node[text=drawColor,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at (137.56, 39.60) {0};
+
+\node[text=drawColor,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at (179.79, 39.60) {1};
+
+\node[text=drawColor,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at (222.02, 39.60) {2};
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 49.20, 67.13) -- ( 49.20,206.73);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 49.20, 67.13) -- ( 43.20, 67.13);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 49.20,102.03) -- ( 43.20,102.03);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 49.20,136.93) -- ( 43.20,136.93);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 49.20,171.83) -- ( 43.20,171.83);
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 49.20,206.73) -- ( 43.20,206.73);
+
+\node[text=drawColor,rotate= 90.00,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at ( 34.80, 67.13) {-2};
+
+\node[text=drawColor,rotate= 90.00,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at ( 34.80,102.03) {-1};
+
+\node[text=drawColor,rotate= 90.00,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at ( 34.80,136.93) {0};
+
+\node[text=drawColor,rotate= 90.00,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at ( 34.80,171.83) {1};
+
+\node[text=drawColor,rotate= 90.00,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at ( 34.80,206.73) {2};
+
+\path[draw=drawColor,line width= 0.4pt,line join=round,line cap=round] ( 49.20, 61.20) --
+	(263.88, 61.20) --
+	(263.88,239.88) --
+	( 49.20,239.88) --
+	cycle;
+\end{scope}
+\begin{scope}
+\path[clip] (  0.00,  0.00) rectangle (289.08,289.08);
+\definecolor{drawColor}{RGB}{0,0,0}
+
+\node[text=drawColor,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at (156.54, 15.60) {rnorm(100)};
+
+\node[text=drawColor,rotate= 90.00,anchor=base,inner sep=0pt, outer sep=0pt, scale=  1.00] at ( 10.80,150.54) {rnorm(100)};
+\end{scope}
+\end{tikzpicture}
+#+end_export
+
+** org code of the above
+
+: ...
+: ...
+: ...
+: Once the =tikzDevice= library is installed, you can proceed to evaluate
+: the following code blocks --- using =C-c C-c= --- :
+:
+: - Actually load the library
+: #+begin_src R :session :exports code :results silent
+:   library("tikzDevice")
+: #+end_src
+:
+: - And the magic part
+:
+: #+name: test_plot
+: #+begin_src R :session :exports both :results output latex :file test.png
+:   tikz(console=TRUE, width=4, height=4)
+:   plot(rnorm(100), rnorm(100))
+:   dummy <- dev.off()
+: #+end_src
+:
+: #+RESULTS: test_plot
+: #+begin_export latex
+: % Created by tikzDevice version 0.12.3.1 on 2021-09-10 04:53:27
+: % !TEX encoding = UTF-8 Unicode
+: \relax
+: \begin{tikzpicture}[x=1pt,y=1pt]
+: \definecolor{fillColor}{RGB}{255,255,255}
+: \path[use as bounding box,fill=fillColor,fill opacity=0.00] (0,0) rectangle (289.08,289.08);
+: ...
+: ...
+: ...
+
+** exporting to pdf
+
+After all that coding all you have to do is export the =file.org= to a
+=file.tex= which is then converted to a =file.pdf= via =pdflatex= or
+another =latex/tex= engine.
+
+You accomplish that pipeline via the =org-export-dispatch= ---
+you can =M-x org-export-dispatch= --- and select the =[l] Export to LaTeX=
+option and then =[o] As PDF file and open=.
+
+-----
+
+#+begin_quote
+If you want some of the functionality of a jupyter notebook within emacs
+there you go. Still jupyter has the widgets. But I think this is pretty
+cool too.
+
+Happy hacking.
+
+{{{AUTHOR}}}
+
+{{{DATE}}}
+#+end_quote
