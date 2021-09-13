@@ -1,0 +1,96 @@
+#+TITLE: Generation of Tikz pictures using SVG for Org Mode html export option.
+#+SUBTITLE: suited for a Doom Emacs distribution.
+#+DATE: 10 September 2021
+#+AUTHOR: manuel.fuica.morales@gmail.com
+#+OPTIONS: toc:2
+#+LATEX_HEADER: \usepackage{tikz}
+
+:MACROS:
+#+MACRO: latex @@latex: \LaTeX@@@@html: LaTeX@@
+:END:
+
+* About SVG file format
+
+** What is it?
+- https://www.elegantthemes.com/blog/wordpress/what-is-an-svg-file-and-how-do-you-use-it
+
+#+begin_quote
+"... A Scalable Vector Graphic (SVG) is a unique type of image format. Unlike
+other varieties, SVGs don’t rely on unique pixels to make up the images
+you see. Instead, they use ‘vector’ data.
+
+By using SVGs, you get images that can scale up to any resolution, which
+comes in handy for web design among plenty of other use cases ..."
+#+end_quote
+
+
+
+SVG, stands for Scalable Vector Graphics, is a markup language based
+on XML, that can be interpreted by web browsers.
+
+Here you can find examples of an SVG file, if you open them from a web
+browser you will see the generated picture, whereas if you visit them
+from a text editor, you will see the actual code, which you will see
+resembles some sort of =html=.
+
+- https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/
+
+
+** How does it relate to html?
+
+Well it's XML which I guess will be inserted into a =file.html=.
+
+** How does it relate to {{{latex}}}
+
+=Tikz= is how you design graphics. =SVG= is how you render those graphics
+in a =file.html=. There has to be an engine which converts a =file.tex=
+which contains the original =Tikz= code and transforms it into a =file.svg=
+which contains the corresponding =SVG= code which then is interpreted
+by a web browser. That way you don't have to paste =images.png=.
+
+We already know that =orgmode= via =latex export= is capable of generating
+=tikz= code. Now the question is, as =orgmode= is aswell capable of exporting
+a =file.org= into a =file.html=, how do I actually do the conversion from
+a =file.org= into a =file.svg= which then can be inserted into a =file.html=?
+
+I guess that there has to be a =#+begin_src latex :results svg= or some sort.
+
+** Backend dependent execution -- conditionally export tikz to SVG on HTML export
+
+This example demonstrates the handling of a LaTeX code block
+differently depending on the export backend.  If the following file is
+exported to HTML the tikz code block will be converted to an SVG
+images, while on export to pdf (through LaTeX) the tikz code will
+simply be inserted into the document verbatim.
+
+First execute the second code block, to define the convenience macro
+and to set the required new variables in ob-latex.el.  Then export to
+HTML and to pdf to see the tree exported as an SVG image and as
+embedded tikz respectively.
+
+: * Tikz test
+: Here's a tree, exported to both html and pdf.
+:
+: #+header: :file (by-backend (html "tree.svg") (t 'nil))
+: #+header: :imagemagick
+: #+header: :results (by-backend (pdf "latex") (t "raw"))
+: #+begin_src latex
+:   \usetikzlibrary{trees}
+:   \begin{tikzpicture}
+:     \node [circle, draw, fill=red!20] at (0,0) {1}
+:     child { node [circle, draw, fill=blue!30] {2}
+:       child { node [circle, draw, fill=green!30] {3} }
+:       child { node [circle, draw, fill=yellow!30] {4} }};
+:   \end{tikzpicture}
+: #+end_src
+:
+: * COMMENT setup
+: #+begin_src emacs-lisp :results silent
+:   (setq org-babel-latex-htlatex "htlatex")
+:   (defmacro by-backend (&rest body)
+:     `(case (if (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
+: #+end_src
+
+This allows for the automatic composition of beautiful scalable
+graphics across both HTML and pdf from a single document and image
+source.

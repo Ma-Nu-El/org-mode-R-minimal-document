@@ -1,0 +1,71 @@
+% Created 2021-09-10 Fri 21:10
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{tikz}
+\author{manuel.fuica.morales@gmail.com}
+\date{10 September 2021}
+\title{Generation of Tikz pictures using SVG for Org Mode html export option.\\\medskip
+\large suited for a Doom Emacs distribution.}
+\hypersetup{
+ pdfauthor={manuel.fuica.morales@gmail.com},
+ pdftitle={Generation of Tikz pictures using SVG for Org Mode html export option.},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.5)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+
+\section{About SVG file format}
+\label{sec:org55c7a3c}
+
+\subsection{What is it?}
+\label{sec:org0e851df}
+\subsection{How does it relate to  \LaTeX}
+\label{sec:org4b42a9c}
+This is some text.
+\subsection{How does it relate to html ?}
+\label{sec:orgf3588a3}
+
+
+
+\section{Backend dependent execution -- conditionally export tikz to SVG on HTML export}
+\label{sec:orgd3e58e2}
+
+This example demonstrates the handling of a \LaTeX{} code block
+differently depending on the export backend.  If the following file is
+exported to HTML the tikz code block will be converted to an SVG
+images, while on export to pdf (through \LaTeX{}) the tikz code will
+simply be inserted into the document verbatim.
+
+First execute the second code block, to define the convenience macro
+and to set the required new variables in ob-latex.el.  Then export to
+HTML and to pdf to see the tree exported as an SVG image and as
+embedded tikz respectively.
+
+\section{Tikz test}
+\label{sec:org83b738b}
+Here's a tree, exported to both html and pdf.
+
+
+This allows for the automatic composition of beautiful scalable
+graphics across both HTML and pdf from a single document and image
+source.
+\end{document}

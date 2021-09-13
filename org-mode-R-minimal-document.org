@@ -2,7 +2,7 @@
 :ID:       bdc67040-7646-45b0-adca-db9c55340c02
 :END:
 # #+TITLE: Org Mode R Minimal Document using tikzDevice
-#+TITLE: Minimal document example for plot generation using Org Mode with R source code and tikzDevice library
+#+TITLE: Minimal document example for plot generation using Org Mode with R and tikzDevice exported to pdf format.
 #+SUBTITLE: suited for a Doom Emacs distribution.
 #+DATE: 10 September 2021
 #+AUTHOR: manuel.fuica.morales@gmail.com
@@ -29,8 +29,8 @@
 ** this tutorial
 
 #+begin_quote
-I'd recommend to read the pdf version of this, or GUI emacs at least,
-CLI emacs wont show the generated graph.
+I'd recommend to read the pdf version of this alongside the
+orgmode code so you can have both the source and the final product.
 #+end_quote
 
 I write tutorials with the objective of reminding me later how to do the
