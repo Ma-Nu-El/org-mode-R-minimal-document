@@ -1,0 +1,420 @@
+#+TITLE: From TikZ to SVG with orgmode
+#+LATEX_HEADER: \usepackage{tikz}
+
+* Preamble
+I have restarted Emacs right before each trial so I can have clean
+Messages and debug buffers for every trial.
+
+Note that also there's an empty =Shell Command Output= buffer lying around.
+
+* The idea
+#+name: rectangle
+#+header: :imagemagick yes
+#+header: :results output file link
+#+header: :file rectangle.svg
+#+begin_src latex
+\begin{tikzpicture}
+    \draw [blue,fill] (0,0) rectangle (5,3);
+    \draw [red,fill] (0,0) rectangle (3,2);
+\end{tikzpicture}
+#+end_src
+
+#+RESULTS: rectangle
+[[file:rectangle.svg]]
+
+The generated file is an =svg= that contains an =svg= image for the literal
+body of the cody block instead of the =svg= of the rectangle I want to
+generate.
+
+* Buffers after =C-c C-c= over block
+** Messages
+: Wrote /home/ma/org/org-mode-R-minimal-document/rectangle.org
+: "rectangle.org" 27L, 499C written
+: executing Latex code block (rectangle)...
+: Processing LaTeX file /tmp/babel-zSsRC8/latex-h7ZXfg.tex...
+: PDF file produced with errors.
+:
+: ** (org.inkscape.Inkscape:233017): WARNING **: 22:38:05.257: Fonts dir '/home/ma/.config/inkscape/fonts' does not exist and will be ignored.
+: (Shell command succeeded with no output)
+: Code block evaluation complete.
+** PDF latex output buff
+: *This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex)
+:  restricted \write18 enabled.
+: entering extended mode
+: (/tmp/babel-zSsRC8/latex-h7ZXfg.tex
+: LaTeX2e <2020-02-02> patch level 2
+: L3 programming layer <2020-02-14>
+: (/usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
+: Document Class: standalone 2018/03/26 v1.3a Class to compile TeX sub-files stan
+: dalone
+: (/usr/share/texlive/texmf-dist/tex/latex/tools/shellesc.sty)
+: (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty))
+: (/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex))))
+: (/usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cfg)
+: (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+: Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+: (/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo))
+: (/home/ma/.emacs.d/.local/straight/build-27.1/auctex/latex/preview.sty
+: (/home/ma/.emacs.d/.local/straight/build-27.1/auctex/latex/prtightpage.def)))
+: (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def)
+: (/tmp/babel-zSsRC8//latex-h7ZXfg.aux)
+: Preview: Fontsize 10pt
+: Preview: PDFoutput 1
+:
+: ! LaTeX Error: Environment tikzpicture undefined.
+:
+: See the LaTeX manual or LaTeX Companion for explanation.
+: Type  H <return>  for immediate help.
+:  ...
+:
+: l.3 \begin{document}\begin{tikzpicture}
+:
+: ! Undefined control sequence.
+: l.4     \draw
+:               [blue,fill] (0,0) rectangle (5,3);
+: ! Undefined control sequence.
+: l.5     \draw
+:               [red,fill] (0,0) rectangle (3,2);
+:
+: ! LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+:
+: See the LaTeX manual or LaTeX Companion for explanation.
+: Type  H <return>  for immediate help.
+:  ...
+:
+: l.6 \end{tikzpicture}
+:                      \end{document}
+: Preview: Tightpage 0 0 0 0
+: [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+: (/tmp/babel-zSsRC8//latex-h7ZXfg.aux) )
+: (see the transcript file for additional information)</usr/share/texlive/texmf-d
+: ist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+: Output written on /tmp/babel-zSsRC8//latex-h7ZXfg.pdf (1 page, 14370 bytes).
+: Transcript written on /tmp/babel-zSsRC8//latex-h7ZXfg.log.
+** Org babel latex output
+: ** (org.inkscape.Inkscape:233017): WARNING **: 22:38:05.257: Fonts dir '/home/ma/.config/inkscape/fonts' does not exist and will be ignored.
+* Buffers after trying to export
+** html
+*** Messages
+: executing Latex code block (rectangle)...
+: Processing LaTeX file /tmp/babel-jbF6eW/latex-UnNt5R.tex...
+: PDF file produced with errors.
+:
+: ,** (org.inkscape.Inkscape:235519): WARNING **: 22:41:53.391: Fonts dir '/home/ma/.config/inkscape/fonts' does not exist and will be ignored.
+: (Shell command succeeded with no output)
+: Code block evaluation complete.
+: Wrote /home/ma/org/org-mode-R-minimal-document/rectangle.html
+: "rectangle.html" 407L, 15004C written
+: Running /usr/bin/sensible-browser /home/ma/org/org-mode-R-minimal-document/rectangle.html...done
+*** pdf latex output
+: *This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex)
+:  restricted \write18 enabled.
+: entering extended mode
+: (/tmp/babel-jbF6eW/latex-UnNt5R.tex
+: LaTeX2e <2020-02-02> patch level 2
+: L3 programming layer <2020-02-14>
+: (/usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
+: Document Class: standalone 2018/03/26 v1.3a Class to compile TeX sub-files stan
+: dalone
+: (/usr/share/texlive/texmf-dist/tex/latex/tools/shellesc.sty)
+: (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty))
+: (/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex))))
+: (/usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cfg)
+: (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+: Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+: (/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo))
+: (/usr/share/texmf/tex/latex/preview/preview.sty
+: (/usr/share/texmf/tex/latex/preview/prtightpage.def)))
+: (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def)
+: (/tmp/babel-jbF6eW//latex-UnNt5R.aux)
+: Preview: Fontsize 10pt
+: Preview: PDFoutput 1
+:
+: ! LaTeX Error: Environment tikzpicture undefined.
+:
+: See the LaTeX manual or LaTeX Companion for explanation.
+: Type  H <return>  for immediate help.
+:  ...
+:
+: l.3 \begin{document}\begin{tikzpicture}
+:
+: ! Undefined control sequence.
+: l.4     \draw
+:               [blue,fill] (0,0) rectangle (5,3);
+: ! Undefined control sequence.
+: l.5     \draw
+:               [red,fill] (0,0) rectangle (3,2);
+:
+: ! LaTeX Error: \begin{document} ended by \end{tikzpicture}.
+:
+: See the LaTeX manual or LaTeX Companion for explanation.
+: Type  H <return>  for immediate help.
+:  ...
+:
+: l.6 \end{tikzpicture}
+:                      \end{document}
+: Preview: Tightpage 0 0 0 0
+: [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+: (/tmp/babel-jbF6eW//latex-UnNt5R.aux) )
+: (see the transcript file for additional information)</usr/share/texlive/texmf-d
+: ist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+: Output written on /tmp/babel-jbF6eW//latex-UnNt5R.pdf (1 page, 14370 bytes).
+: Transcript written on /tmp/babel-jbF6eW//latex-UnNt5R.log.
+*** org babel latex output
+: ** (org.inkscape.Inkscape:235519): WARNING **: 22:41:53.391: Fonts dir '/home/ma/.config/inkscape/fonts' does not exist and will be ignored.
+** pdf
+*** Messages
+: org-babel-exp process latex at position 248...
+: executing Latex code block (rectangle)...
+: Processing LaTeX file /tmp/babel-CpIxUb/latex-RUZwkR.tex...
+: PDF file produced with errors.
+:
+: ,** (org.inkscape.Inkscape:237165): WARNING **: 22:44:43.378: Fonts dir '/home/ma/.config/inkscape/fonts' does not exist and will be ignored.
+: (Shell command succeeded with no output)
+: Code block evaluation complete.
+: Automatic display of crossref information was turned on
+: Applying style hooks...
+: Loading /home/ma/org/org-mode-R-minimal-document/.auctex-auto/rectangle.el (source)...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/article.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/inputenc.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/fontenc.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/graphicx.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/longtable.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/wrapfig.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/ulem.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/amsmath.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/amstext.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/amsbsy.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/amsopn.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/textcomp.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/amssymb.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/amsfonts.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/hyperref.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/url.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/nameref.elc...done
+: Loading /home/ma/.emacs.d/.local/straight/build-27.1/auctex/style/tikz.elc...done
+: Applying style hooks...done
+: Wrote /home/ma/org/org-mode-R-minimal-document/rectangle.tex
+: "rectangle.tex" 208L, 7750C written
+: Processing LaTeX file rectangle.tex...
+: org-compile-file: File "/home/ma/org/org-mode-R-minimal-document/rectangle.pdf" wasn’t produced.  See "*Org PDF LaTeX Output*" for details
+*** pdf latex output
+: *This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex)
+:  restricted \write18 enabled.
+: entering extended mode
+: (.//rectangle.tex
+: LaTeX2e <2020-02-02> patch level 2
+: L3 programming layer <2020-02-14>
+: (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+: Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+: (/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo))
+: (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)
+: (/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def)))
+: (/usr/share/texlive/texmf-dist/tex/latex/grffile/grffile.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/wrapfig/wrapfig.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/graphics/rotating.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty))
+: (/usr/share/texlive/texmf-dist/tex/generic/ulem/ulem.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+: For additional information on amsmath, use the `?' option.
+: (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty))
+: (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty))
+: (/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+: (/usr/share/texlive/texmf-dist/tex/latex/capt-of/capt-of.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+: (/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/pdftexcmds/pdftexcmds.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/infwarerr/infwarerr.sty))
+: (/usr/share/texlive/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty)
+: (/usr/share/texlive/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+: (/usr/share/texlive/texmf-dist/tex/generic/pdfescape/pdfescape.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/hycolor/hycolor.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/auxhook/auxhook.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/kvoptions/kvoptions.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def)
+: (/usr/share/texlive/texmf-dist/tex/generic/intcalc/intcalc.sty)
+: (/usr/share/texlive/texmf-dist/tex/generic/etexcmds/etexcmds.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/url/url.sty)
+: (/usr/share/texlive/texmf-dist/tex/generic/bitset/bitset.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+: (/usr/share/texlive/texmf-dist/tex/generic/atbegshi/atbegshi.sty))
+: (/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+: (/usr/share/texlive/texmf-dist/tex/latex/atveryend/atveryend.sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))
+: (/usr/share/texlive/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-lists.t
+: ex)) (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+: (/usr/share/texlive/texmf-dist/tex/latex/ms/everyshi.sty))
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/pgf.revision.tex)))
+: (/usr/share/texlive/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.code.t
+: ex)) (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.def
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.de
+: f)))
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.
+: tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.
+: tex)) (/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg))
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code
+: .tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonomet
+: ric.code.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.cod
+: e.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison
+: .code.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.
+: tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code
+: .tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.
+: tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerari
+: thmetics.code.tex)))
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex))
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.te
+: x)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.
+: code.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code
+: .tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.te
+: x)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.c
+: ode.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformation
+: s.code.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+: )
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.t
+: ex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing
+: .code.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.te
+: x)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+: )
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+:
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.
+: tex))
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.te
+: x)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.c
+: ode.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.
+: tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex))
+: )
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+: ) (/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+: )
+: (/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65
+: .sty)
+: (/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18
+: .sty)) (/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgffor.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex))
+: (/usr/share/texlive/texmf-dist/tex/latex/pgf/math/pgfmath.sty
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex))
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)))
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+:
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers
+: .code.tex)
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+: )
+: (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+: zlibrarytopaths.code.tex)))
+: (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def)
+: (.//rectangle.aux)
+: (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+: [Loading MPS to PDF converter (version 2006.09.02).]
+: ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg))
+: (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+: (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty)
+: (/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty))
+: (.//rectangle.out) (.//rectangle.out) ABD: EveryShipout initializing macros
+: (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd)
+: (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd) (.//rectangle.toc)
+: ! Undefined control sequence.
+: l.37 \includesvg
+:                 [width=.9\linewidth]{rectangle}
+: ! Missing number, treated as zero.
+: <to be read again>
+:                    ]
+: l.37 \includesvg[width=.9\linewidth]
+:                                     {rectangle}
+: ! Illegal unit of measure (pt inserted).
+: <to be read again>
+:                    ]
+: l.37 \includesvg[width=.9\linewidth]
+:                                     {rectangle}
+: (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd)
+: Overfull \hbox (2.78232pt too wide) in paragraph at lines 45--50
+: \T1/cmr/m/n/10.95 Wrote /home/ma/org/org-mode-R-minimal-document/rectangle.org
+: ``rect-an-
+:
+: Overfull \hbox (3.32857pt too wide) in paragraph at lines 51--54
+: \T1/cmr/m/n/10.95 dir '\T1/cmr/m/it/10.95 home/ma\T1/cmr/m/n/10.95 .config/inks
+: cape/fonts' does not ex-ist and will be ig-nored. (Shell
+: ! Missing { inserted.
+: <to be read again>
+:                    e
+: l.57  restricted \write18 e
+:                            nabled.
+: )
+: Runaway text?
+: enabled. entering extended mode (/tmp/babel-zSsRC8/latex-h7ZXfg.tex L\ETC.
+: ! File ended while scanning text of \write.
+: <inserted text>
+:                 }
+: <*> rectangle.tex
+:
+: ! Emergency stop.
+: <*> rectangle.tex
+:
+: !  ==> Fatal error occurred, no output PDF file produced!
+: Transcript written on .//rectangle.log.
+*** babel latex output
+: ** (org.inkscape.Inkscape:237165): WARNING **: 22:44:43.378: Fonts dir '/home/ma/.config/inkscape/fonts' does not exist and will be ignored.

@@ -1,17 +1,28 @@
+:PROPERTIES:
+:ID:       810a9a92-3ca5-4947-9f40-6855e297fada
+:END:
 #+TITLE: Generation of Tikz pictures using SVG for Org Mode html export option.
 #+SUBTITLE: suited for a Doom Emacs distribution.
 #+DATE: 10 September 2021
 #+AUTHOR: manuel.fuica.morales@gmail.com
-#+OPTIONS: toc:2
-#+LATEX_HEADER: \usepackage{tikz}
+#+OPTIONS: tex:imagemagick
+#+LaTeX_HEADER: \usepackage{tikz}
 
 :MACROS:
 #+MACRO: latex @@latex: \LaTeX@@@@html: LaTeX@@
 :END:
 
-* About SVG file format
+* TOC :TOC_2:noexport:
+:PROPERTIES:
+:ID:       6747527c-d9b9-489d-abd3-9e329de8bb0a
+:END:
+- [[#what-is-it][What is it?]]
+- [[#how-does-it-relate-to-html][How does it relate to html?]]
+- [[#how-does-it-relate-to-latex][How does it relate to {{{latex}}}]]
+- [[#backend-dependent-execution----conditionally-export-tikz-to-svg-on-html-export][Backend dependent execution -- conditionally export tikz to SVG on HTML export]]
+- [[#first-trial][First Trial]]
 
-** What is it?
+* What is it?
 - https://www.elegantthemes.com/blog/wordpress/what-is-an-svg-file-and-how-do-you-use-it
 
 #+begin_quote
@@ -35,27 +46,29 @@ resembles some sort of =html=.
 
 - https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/
 
+* How does it relate to html?
 
-** How does it relate to html?
+Well it's XML which I guess will be inserted into a =file.html= which
+can be rendered by a web browser.
 
-Well it's XML which I guess will be inserted into a =file.html=.
+* How does it relate to {{{latex}}}
 
-** How does it relate to {{{latex}}}
+=Tikz= is how you design --- or program --- graphics. =SVG= is how you render
+those graphics from a =file.html=. There has to be an engine which converts
+a =file.tex= which contains the original =TikZ= code and transforms it into
+a =file.svg= which contains the corresponding =SVG= code which then is
+interpreted by a web browser. That way you don't have to paste =images.png=.
 
-=Tikz= is how you design graphics. =SVG= is how you render those graphics
-in a =file.html=. There has to be an engine which converts a =file.tex=
-which contains the original =Tikz= code and transforms it into a =file.svg=
-which contains the corresponding =SVG= code which then is interpreted
-by a web browser. That way you don't have to paste =images.png=.
-
-We already know that =orgmode= via =latex export= is capable of generating
-=tikz= code. Now the question is, as =orgmode= is aswell capable of exporting
-a =file.org= into a =file.html=, how do I actually do the conversion from
-a =file.org= into a =file.svg= which then can be inserted into a =file.html=?
+We already know that =orgmode= via =latex export= is capable of exporting
+=tikz= code and sucessfully generate a =file.pdf= that contains the render
+of the =TikZ= code. Now the question is, as =orgmode= is aswell capable of
+exporting a =file.org= into a =file.html=, how do I actually do the
+conversion from a =file.org= into a =file.svg= which then can be inserted
+into a =file.html=?
 
 I guess that there has to be a =#+begin_src latex :results svg= or some sort.
 
-** Backend dependent execution -- conditionally export tikz to SVG on HTML export
+* Backend dependent execution -- conditionally export tikz to SVG on HTML export
 
 This example demonstrates the handling of a LaTeX code block
 differently depending on the export backend.  If the following file is
@@ -94,3 +107,42 @@ embedded tikz respectively.
 This allows for the automatic composition of beautiful scalable
 graphics across both HTML and pdf from a single document and image
 source.
+
+* First Trial
+- https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-LaTeX.html
+  + local
+    - [[file:~/txt/worg/org-contrib/babel/languages/ob-doc-LaTeX.org]]
+
+
+- https://emacs.stackexchange.com/questions/29871/how-to-embed-svg-output-of-org-mode-src-block-as-inline-svg-in-html-export
+
+"Org Mode can generate /Portable Network Graphics/ (png) bitmaps from
+{{{latex}}} source code blocks, which it does with the =dvipng= program
+that comes with most LaTeX distributions. If you want to generate bitmaps
+in other file formats, then you will need to install /ImageMagick/, a
+software suite to create, edit, compose or convert bitmap images".
+
+Therefore, you must set =:imagemagick= header arg to /non-nil/ if you want
+to export to anything other than =png= format.
+
+: #+header: :imagemagick yes
+: #+begin_src ...
+
+"When not nil the source block is processed to pdf and the pdf is
+converted with ImageMagick to whatever is given as =:file=.
+Thus, the format is not limited to png".
+
+
+#+name: circle
+#+header: :imagemagick yes
+#+header: :results file :file circle.svg
+#+header: :results output
+#+header: :results link
+#+BEGIN_SRC latex
+\begin{tikzpicture}
+\fill[yellow] (0,0) circle (3cm);
+\end{tikzpicture}
+#+END_SRC
+
+#+RESULTS: circle
+[[file:circle.svg]]

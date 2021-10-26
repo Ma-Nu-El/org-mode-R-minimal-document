@@ -1,0 +1,97 @@
+#+TITLE: Simple SVG from Tikz
+#+DATE: October 2021
+#+option: tex:imagemagick
+
+
+:LATEX_HEADERS:
+#+LATEX_HEADER: \usepackage{tikz}
+:END:
+
+* TOC :TOC_2:noexport:
+- [[#eval-this-elisp][eval this elisp]]
+- [[#title-for-stack-overflow][Title for stack overflow]]
+- [[#simple-svg-circle-minimal-example][Simple SVG circle minimal example]]
+- [[#org-version][org-version]]
+  - [[#yet-another-test][yet another test]]
+  - [[#another][another]]
+
+* eval this elisp
+#+begin_src emacs-lisp :results silent
+  (setq org-babel-latex-htlatex "htlatex")
+  (defmacro by-backend (&rest body)
+    `(case (if (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
+#+end_src
+
+* Title for stack overflow
+
+I've seen countless examples of how to manipulate output and other things
+related to svg and orgmode. However, I can't manage to create a simple
+svg from a tikz source code block. Need help.
+
+I have tried everything and I've broken down a minimal example to this.
+
+- [X] Imagemagick is installed
+
+* Simple SVG circle minimal example
+
+1) Load this first.
+   : #+LATEX_HEADER: \usepackage{tikz}
+
+2) Then \\
+   #+name: circle
+   #+begin_src latex :imagemagick yes :file circle.svg
+   \begin{tikzpicture}
+     \fill[yellow] (0,0) circle (3cm);
+   \end{tikzpicture}
+   #+end_src
+
+   #+RESULTS: circle
+   :results:
+   [[file:circle.svg]]
+   :end:
+
+
+#+begin_src emacs-lisp :results silent
+(setq org-babel-latex-htlatex "htlatex")
+#+end_src
+
+#+HEADER: :fit yes :imagemagick yes
+#+HEADER: :packages '("\\usepackage{tikz}")
+#+BEGIN_SRC latex :file circle.svg
+   \begin{tikzpicture}
+     \fill[yellow] (0,0) circle (3cm);
+   \end{tikzpicture}
+#+END_SRC
+
+#+RESULTS:
+#+begin_export latex
+#+end_export
+
+
+
+
+I've noticed that
+* org-version
+#+name: org-version
+#+begin_src emacs-lisp :exports both
+org-version
+#+end_src
+
+#+RESULTS: org-version
+: 9.5
+
+** yet another test
+
+#+name: circle
+#+header: :results file drawer
+#+header: :file circle.svg
+#+header: :imagemagick yes
+#+header: :headers '("\\usepackage{tikz,svg}")
+#+begin_src latex
+  \begin{tikzpicture}
+      \fill[yellow] (0,0) circle (3cm);
+    \end{tikzpicture}
+#+end_src
+
+** another
+
